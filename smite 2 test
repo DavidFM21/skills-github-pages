@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quiz SMITE 2</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+    }
+    h1 {
+      text-align: center;
+      color: #333;
+    }
+    .question {
+      background: #fff;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    .options label {
+      display: block;
+      margin: 8px 0;
+    }
+    .result {
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    button {
+      background-color: #008cff;
+      color: white;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #finalScore {
+      font-size: 1.2em;
+      text-align: center;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Test de SMITE 2</h1>
+  <form id="quizForm">
+    <!-- Questions will be injected here -->
+  </form>
+  <div id="finalScore"></div>
+
+  <script>
+    const questions = [
+      {
+        q: "¿Cuál de los siguientes dioses pertenece al panteón nórdico en Smite 2?",
+        options: ["Anubis", "Thor", "Kukulkan", "Cthulhu"],
+        answer: 1
+      },
+      {
+        q: "En el modo Joust de Smite 2, ¿cuántos jugadores por equipo participan normalmente?",
+        options: ["1", "3", "5", "6"],
+        answer: 1
+      },
+      {
+        q: "¿Qué rol cumple un personaje que se enfoca en curar y proteger a su equipo?",
+        options: ["Asesino", "Guerrero", "Guardián", "Soporte"],
+        answer: 3
+      },
+      {
+        q: "¿Cuál es el principal recurso que usas para comprar objetos durante una partida?",
+        options: ["Fe", "Experiencia", "Oro", "Maná"],
+        answer: 2
+      },
+      {
+        q: "¿Qué habilidad definitiva lanza Thor para volar y luego estrellarse desde el cielo?",
+        options: ["Berserker Barrage", "Anvil of Dawn", "Mjölnir’s Attunement", "Stormbreaker"],
+        answer: 1
+      }
+    ];
+
+    const form = document.getElementById("quizForm");
+    let score = 0;
+
+    questions.forEach((q, index) => {
+      const questionDiv = document.createElement("div");
+      questionDiv.className = "question";
+      questionDiv.innerHTML = `<p><strong>${index + 1}.</strong> ${q.q}</p>`;
+      const optionsDiv = document.createElement("div");
+      optionsDiv.className = "options";
+
+      q.options.forEach((opt, i) => {
+        const label = document.createElement("label");
+        label.innerHTML = `
+          <input type="radio" name="q${index}" value="${i}" /> ${opt}
+        `;
+        optionsDiv.appendChild(label);
+      });
+
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = "Responder";
+      const resultP = document.createElement("p");
+      resultP.className = "result";
+
+      button.onclick = () => {
+        const selected = form.querySelector(`input[name='q${index}']:checked`);
+        if (!selected) {
+          alert("Selecciona una respuesta antes de continuar.");
+          return;
+        }
+        const userAnswer = parseInt(selected.value);
+        if (userAnswer === q.answer) {
+          resultP.textContent = "✅ ¡Correcto!";
+          score += 2;
+        } else {
+          resultP.textContent = `❌ Incorrecto. La respuesta correcta es: ${q.options[q.answer]}`;
+        }
+        button.disabled = true;
+        form.querySelectorAll(`input[name='q${index}']`).forEach(i => i.disabled = true);
+        if (form.querySelectorAll(".question button:disabled").length === questions.length) {
+          document.getElementById("finalScore").textContent = `Resultado final: ${score}/10`;
+        }
+      };
+
+      questionDiv.appendChild(optionsDiv);
+      questionDiv.appendChild(button);
+      questionDiv.appendChild(resultP);
+      form.appendChild(questionDiv);
+    });
+  </script>
+</body>
+</html>
